@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rialo: The Hero Of Web3</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="logo-wrapper">
+        <img src="img/logo.svg" alt="Rialo Logo" id="rialo-logo">
+    </div>
+    <div id="game-container">
+        <div id="start-screen">
+            <h1>Rialo: The Hero Of Web3</h1>
+            <p>A monster representing all of Web3's problems is on the loose! Enter your name and fight it by choosing the correct Rialo solution to each problem.</p>
+            <input type="text" id="player-name-input" placeholder="Enter your hero name" maxlength="20">
+            <button id="start-game-btn">Start a New Game</button>
+        </div>
+
+        <div id="main-game" class="hidden">
+            <div class="stats-bg-wrapper">
+                <div id="stats-container">
+                    <!-- Nama dan health bar hero -->
+                    <div class="stat-label hero-label">
+                        <span id="player-name-display">a the Rialo Hero</span>
+                        <div class="health-bar-container">
+                            <div id="player-health-bar" class="health-bar"></div>
+                        </div>
+                        <span id="player-health-text">5/5</span>
+                    </div>
+                    <!-- Nama dan health bar monster -->
+                    <div class="stat-label monster-label">
+                        <span id="monster-name-display">Monster Web3 Problems</span>
+                        <div class="health-bar-container">
+                            <div id="monster-health-bar" class="health-bar"></div>
+                        </div>
+                        <span id="monster-health-text">5/5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="battle-log">
+                <p id="problem-text">The monster attacks with a problem!</p>
+            </div>
+
+            <div id="options-container">
+                <button class="option-btn" data-choice="1">Option 1</button>
+                <button class="option-btn" data-choice="2">Option 2</button>
+                <button class="option-btn" data-choice="3">Option 3</button>
+            </div>
+            
+            <div id="feedback-container">
+                <p id="feedback-text"></p>
+                <p id="explanation-text"></p>
+                <button id="next-question-btn" class="hidden">Next Round</button>
+            </div>
+        </div>
+
+        <div id="end-screen" class="hidden">
+            <h2 id="end-message">Game Over!</h2>
+            <button id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+    <div id="author-credit">
+        <a href="https://x.com/eunoiabluu" target="_blank" rel="noopener">@eunoiabluu</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
