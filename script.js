@@ -77,6 +77,8 @@ const monsterHealthText = document.getElementById('monster-health-text');
 const playerHealthBar = document.getElementById('player-health-bar');
 const monsterHealthBar = document.getElementById('monster-health-bar');
 
+const statsContainer = document.getElementById('stats-container');
+
 const problemText = document.getElementById('problem-text');
 const optionButtons = document.querySelectorAll('.option-btn');
 const feedbackText = document.getElementById('feedback-text');
@@ -104,6 +106,14 @@ function startGame() {
     startScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
     mainGame.classList.remove('hidden');
+    
+    // Hapus gambar monster kalah jika ada dari game sebelumnya
+    const existingImage = endScreen.querySelector('.monster-lose-image');
+    if (existingImage) {
+        existingImage.remove();
+    }
+    // Kembalikan style endScreen ke semula
+    endScreen.style.position = '';
 
     updateStats();
     displayQuestion();
@@ -123,11 +133,9 @@ function displayQuestion() {
     nextQuestionBtn.classList.add('hidden');
     optionButtons.forEach(btn => btn.disabled = false);
 
-    // Acak options dan update index jawaban benar
     const rawQuestion = shuffledQuestions[currentQuestionIndex];
     const question = shuffleOptionsAndAnswer(rawQuestion);
 
-    // Simpan question ke state agar checkAnswer pakai index yang benar
     window.currentQuestion = question;
 
     problemText.textContent = `Monster: "${question.problem}"`;
@@ -171,22 +179,51 @@ function nextRound() {
 function endGame() {
     mainGame.classList.add('hidden');
     endScreen.classList.remove('hidden');
-    if (monsterHealth <= 0) {
-        endMessage.textContent = `Congratulations, ${playerName}! You defeated the Monster of Web3 Problems. Rialo is the solution!`;
-    } else {
-        endMessage.textContent = `Oh no, ${playerName}! You were defeated. Try again and master the power of Rialo!`;
+
+  if (monsterHealth <= 0) {
+    endMessage.textContent = `Congratulations, ${playerName}! You defeated the Monster of Web3 Problems. Rialo is the solution!`;
+    
+    // Cek apakah gambar sudah ada agar tidak ditambahkan berulang kali
+    if (!document.querySelector('.monster-lose-image')) {
+        // 1. Buat elemen <img> baru
+        const loseImage = document.createElement('img');
+        loseImage.src = 'img/monster_lose.jpg';
+        loseImage.className = 'monster-lose-image';
+
+        // 2. Atur style agar gambar menjadi background
+        loseImage.style.position = 'absolute';
+        loseImage.style.top = '0';
+        loseImage.style.left = '0';
+        loseImage.style.width = '100%';
+        loseImage.style.height = '100%';
+        loseImage.style.objectFit = 'cover';
+        loseImage.style.zIndex = '0'; // << PERUBAHAN DI SINI
+        loseImage.style.opacity = '0.7'; 
+        
+        // 3. Atur style parent (end-screen) agar posisi absolut bekerja
+        endScreen.style.overflow = 'hidden';
+
+        // 4. Tambahkan gambar ke dalam div end-screen
+        endScreen.prepend(loseImage);
+
+        // Pastikan teks dan tombol berada di atas gambar
+        endMessage.style.position = 'relative';
+        endMessage.style.zIndex = '1';
+        playAgainBtn.style.position = 'relative';
+        playAgainBtn.style.zIndex = '1';
     }
+} else {
+    endMessage.textContent = `Oh no, ${playerName}! You were defeated. Try again and master the power of Rialo!`;
+}
 }
 
 function shuffleOptionsAndAnswer(question) {
     const options = [...question.options];
-    const correctAnswerText = question.options[question.answer]; // fix di sini!
-    // Fisher-Yates shuffle
+    const correctAnswerText = question.options[question.answer];
     for (let i = options.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [options[i], options[j]] = [options[j], options[i]];
     }
-    // Cari index baru dari jawaban benar
     const newAnswerIndex = options.indexOf(correctAnswerText);
     return {
         ...question,

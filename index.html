@@ -4,69 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rialo: The Hero Of Web3</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'VT323', monospace;
+        }
+        h1, h2, button, #player-name-display, #monster-name-display {
+            font-family: 'Press Start 2P', cursive;
+        }
+        /* Custom styles for sprite animations if needed */
+        .sprite {
+            width: 128px;
+            height: 256px;
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
+        }
+        .hero-idle { background-image: url('img/Idle.png'); }
+        .hero-attack { background-image: url('img/Attack.png'); }
+        .hero-hurt { background-image: url('img/Hurt.png'); }
+        .hero-dead { background-image: url('img/Dead.png'); }
+        .monster-idle { background-image: url('img/Idle.png'); }
+    </style>
 </head>
-<body>
-    <div id="logo-wrapper">
-        <img src="img/logo.svg" alt="Rialo Logo" id="rialo-logo">
-    </div>
-    <div id="game-container">
-        <div id="start-screen">
-            <h1>Rialo: The Hero Of Web3</h1>
-            <p>A monster representing all of Web3's problems is on the loose! Enter your name and fight it by choosing the correct Rialo solution to each problem.</p>
-            <input type="text" id="player-name-input" placeholder="Enter your hero name" maxlength="20">
-            <button id="start-game-btn">Start a New Game</button>
-        </div>
+<body class="bg-[#e8e3d5] text-[#010101] flex justify-center items-center min-h-screen m-0 text-lg">
 
-        <div id="main-game" class="hidden">
-            <div class="stats-bg-wrapper">
-                <div id="stats-container">
-                    <!-- Nama dan health bar hero -->
-                    <div class="stat-label hero-label">
-                        <span id="player-name-display">a the Rialo Hero</span>
-                        <div class="health-bar-container">
-                            <div id="player-health-bar" class="health-bar"></div>
+    <div id="logo-wrapper" class="fixed top-5 left-5 z-50">
+        <img src="img/logo.svg" alt="Rialo Logo" id="rialo-logo" class="max-w-[120px] h-auto rounded-xl shadow-lg">
+    </div>
+
+   <div id="game-container" class="w-[90%] max-w-5xl text-center"> <div id="start-screen" class="p-5 bg-[#e8e3d5]">
+        <h1 class="text-[#010101] mt-0">Rialo: The Hero Of Web3</h1>
+        <p class="leading-relaxed">A monster representing all of Web3's problems is on the loose! Enter your name and fight it by choosing the correct Rialo solution to each problem.</p>
+        <input type="text" id="player-name-input" placeholder="Enter your hero name" maxlength="20" class="block w-4/5 max-w-xs mx-auto my-5 p-2.5 font-['VT323',monospace] text-lg border-2 border-[#e8e3d5] text-[#010101] rounded-md">
+        <button id="start-game-btn" class="text-base py-3 px-6 border-none bg-[#a9ddd3] text-[#010101] cursor-pointer transition-all duration-200 ease-in-out rounded-md mt-2.5 hover:bg-[#f95959] hover:-translate-y-0.5">Start a New Game</button>
+    </div>
+
+    <div id="main-game" class="hidden">
+        <div id="game-interface-wrapper" class="flex flex-col md:flex-row md:gap-8 mt-4">
+
+            <div id="visual-pane" class="md:w-4/5">
+                <div id="game-visual" class="w-full aspect-[16/9] mx-auto bg-contain bg-center bg-no-repeat" style="background-image: url('img/stats_container.jpg');">
+                </div>
+                <div id="stats-ui-container" class="w-full mx-auto mt-4 flex justify-between items-start gap-4 px-2">
+                    <div class="flex-1 text-center">
+                        <span id="monster-name-display" class="block text-[#010101] text-lg mb-1.5" style="text-shadow: 1px 1px #ccc;">Monster Web3 Problems</span>
+                        <div class="bg-[#1a1a2e] rounded-md overflow-hidden h-5 border-2 border-[#555] mx-auto w-full">
+                            <div id="monster-health-bar" class="h-full w-full bg-[#f44336] transition-width duration-500 ease-in-out"></div>
                         </div>
-                        <span id="player-health-text">5/5</span>
+                        <span id="monster-health-text" class="text-[#010101] font-['VT323',monospace] text-lg block mt-1">5/5</span>
                     </div>
-                    <!-- Nama dan health bar monster -->
-                    <div class="stat-label monster-label">
-                        <span id="monster-name-display">Monster Web3 Problems</span>
-                        <div class="health-bar-container">
-                            <div id="monster-health-bar" class="health-bar"></div>
+                    <div class="flex-1 text-center">
+                        <span id="player-name-display" class="block text-[#010101] text-lg mb-1.5" style="text-shadow: 1px 1px #ccc;">a Rialo hero</span>
+                        <div class="bg-[#1a1a2e] rounded-md overflow-hidden h-5 border-2 border-[#555] mx-auto w-full">
+                            <div id="player-health-bar" class="h-full w-full bg-[#4caf50] transition-width duration-500 ease-in-out"></div>
                         </div>
-                        <span id="monster-health-text">5/5</span>
+                        <span id="player-health-text" class="text-[#010101] font-['VT323',monospace] text-lg block mt-1">5/5</span>
                     </div>
                 </div>
             </div>
 
-            <div id="battle-log">
-                <p id="problem-text">The monster attacks with a problem!</p>
-            </div>
-
-            <div id="options-container">
-                <button class="option-btn" data-choice="1">Option 1</button>
-                <button class="option-btn" data-choice="2">Option 2</button>
-                <button class="option-btn" data-choice="3">Option 3</button>
+            <div id="text-pane" class="md:w-2/5 flex flex-col justify-center mt-6 md:mt-0">
+                <div id="battle-log" class="bg-black/20 p-4 rounded-md min-h-[80px] border-2 border-dashed border-[#0f3460]">
+                    <p id="problem-text">The monster attacks with a problem!</p>
+                </div>
+                <div id="options-container" class="grid grid-cols-1 gap-2.5 mt-4">
+                    <button class="option-btn bg-[#a9ddd3] text-[#010101] text-left font-['VT323',monospace] text-base p-4 border-2 border-[#b0e6dbff] hover:enabled:bg-[#1e497d] disabled:cursor-not-allowed disabled:opacity-50" data-choice="1">Option 1</button>
+                    <button class="option-btn bg-[#a9ddd3] text-[#010101] text-left font-['VT323',monospace] text-base p-4 border-2 border-[#b0e6dbff] hover:enabled:bg-[#1e497d] disabled:cursor-not-allowed disabled:opacity-50" data-choice="2">Option 2</button>
+                    <button class="option-btn bg-[#a9ddd3] text-[#010101] text-left font-['VT323',monospace] text-base p-4 border-2 border-[#b0e6dbff] hover:enabled:bg-[#1e497d] disabled:cursor-not-allowed disabled:opacity-50" data-choice="3">Option 3</button>
+                </div>
+                <div id="feedback-container" class="mt-4 min-h-[100px]">
+                    <p id="feedback-text"></p>
+                    <p id="explanation-text" class="text-[#a7c5eb]"></p>
+                    <button id="next-question-btn" class="hidden text-base py-3 px-6 border-none bg-[#a9ddd3] text-[#010101] cursor-pointer transition-all duration-200 ease-in-out rounded-md mt-2.5 hover:bg-[#f95959] hover:-translate-y-0.5">Next Round</button>
+                </div>
             </div>
             
-            <div id="feedback-container">
-                <p id="feedback-text"></p>
-                <p id="explanation-text"></p>
-                <button id="next-question-btn" class="hidden">Next Round</button>
-            </div>
-        </div>
-
-        <div id="end-screen" class="hidden">
-            <h2 id="end-message">Game Over!</h2>
-            <button id="play-again-btn">Play Again</button>
         </div>
     </div>
-    <div id="author-credit">
-        <a href="https://x.com/eunoiabluu" target="_blank" rel="noopener">@eunoiabluu</a>
+
+    <div id="end-screen" class="hidden fixed inset-0 flex flex-col justify-center items-center p-5 bg-[#e8e3d5]">
+        <h2 id="end-message" class="text-[#010101] mt-0">Game Over!</h2>
+        <button id="play-again-btn" class="text-base py-3 px-6 border-none bg-[#a9ddd3] text-[#010101] cursor-pointer transition-all duration-200 ease-in-out rounded-md mt-2.5 hover:bg-[#f95959] hover:-translate-y-0.5">Play Again</button>
+    </div>
+</div>
+    <div id="author-credit" class="fixed right-5 bottom-4 text-base text-[#222] opacity-70 z-50 font-['VT323',monospace]">
+        <a href="https://x.com/eunoiabluu" target="_blank" rel="noopener" class="text-[#222] no-underline py-1 px-2.5 rounded-md transition-colors duration-200 hover:bg-[#e8e3d5] hover:text-[#1e497d]">@eunoiabluu</a>
     </div>
 
     <script src="script.js"></script>
